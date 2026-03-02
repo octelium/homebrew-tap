@@ -1,0 +1,36 @@
+name: Test Homebrew Formula
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-brew:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-13, macos-latest]
+    runs-on: ${{ matrix.os }}
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Homebrew (Linux only)
+        if: runner.os == 'Linux'
+        run: |
+          echo "/home/linuxbrew/.linuxbrew/bin" >> $GITHUB_PATH
+
+      - name: Install from Local Formula
+        run: |
+          brew install --build-from-source ./Formula/octelium.rb
+
+      - name: Verify Binaries
+        run: |
+          echo "Testing octelium..."
+          octelium version
+          
+          echo "Testing octeliumctl..."
+          octeliumctl version
+          
+          echo "Testing octops..."
+          octops version
