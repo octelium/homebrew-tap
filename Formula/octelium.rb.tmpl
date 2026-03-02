@@ -1,0 +1,86 @@
+class Octelium < Formula
+  desc "Octelium CLI suite: octelium, octeliumctl, and octops"
+  homepage "https://octelium.com"
+  version "${CLEAN_VERSION}"
+  license "Apache-2.0"
+
+  on_macos do
+    on_intel do
+      url "https://github.com/octelium/octelium/releases/download/${TAG}/octelium-darwin-amd64.tar.gz"
+      sha256 "${SHA_OCTELIUM_DARWIN_AMD64}"
+
+      resource "octeliumctl" do
+        url "https://github.com/octelium/octelium/releases/download/${TAG}/octeliumctl-darwin-amd64.tar.gz"
+        sha256 "${SHA_OCTELIUMCTL_DARWIN_AMD64}"
+      end
+
+      resource "octops" do
+        url "https://github.com/octelium/octelium/releases/download/${TAG}/octops-darwin-amd64.tar.gz"
+        sha256 "${SHA_OCTOPS_DARWIN_AMD64}"
+      end
+    end
+
+    on_arm do
+      url "https://github.com/octelium/octelium/releases/download/${TAG}/octelium-darwin-arm64.tar.gz"
+      sha256 "${SHA_OCTELIUM_DARWIN_ARM64}"
+
+      resource "octeliumctl" do
+        url "https://github.com/octelium/octelium/releases/download/${TAG}/octeliumctl-darwin-arm64.tar.gz"
+        sha256 "${SHA_OCTELIUMCTL_DARWIN_ARM64}"
+      end
+
+      resource "octops" do
+        url "https://github.com/octelium/octelium/releases/download/${TAG}/octops-darwin-arm64.tar.gz"
+        sha256 "${SHA_OCTOPS_DARWIN_ARM64}"
+      end
+    end
+  end
+
+  on_linux do
+    on_intel do
+      url "https://github.com/octelium/octelium/releases/download/${TAG}/octelium-linux-amd64.tar.gz"
+      sha256 "${SHA_OCTELIUM_LINUX_AMD64}"
+
+      resource "octeliumctl" do
+        url "https://github.com/octelium/octelium/releases/download/${TAG}/octeliumctl-linux-amd64.tar.gz"
+        sha256 "${SHA_OCTELIUMCTL_LINUX_AMD64}"
+      end
+
+      resource "octops" do
+        url "https://github.com/octelium/octelium/releases/download/${TAG}/octops-linux-amd64.tar.gz"
+        sha256 "${SHA_OCTOPS_LINUX_AMD64}"
+      end
+    end
+
+    on_arm do
+      url "https://github.com/octelium/octelium/releases/download/${TAG}/octelium-linux-arm64.tar.gz"
+      sha256 "${SHA_OCTELIUM_LINUX_ARM64}"
+
+      resource "octeliumctl" do
+        url "https://github.com/octelium/octelium/releases/download/${TAG}/octeliumctl-linux-arm64.tar.gz"
+        sha256 "${SHA_OCTELIUMCTL_LINUX_ARM64}"
+      end
+
+      resource "octops" do
+        url "https://github.com/octelium/octelium/releases/download/${TAG}/octops-linux-arm64.tar.gz"
+        sha256 "${SHA_OCTOPS_LINUX_ARM64}"
+      end
+    end
+  end
+
+  def install
+    bin.install "octelium"
+    resource("octeliumctl").stage { bin.install "octeliumctl" }
+    resource("octops").stage { bin.install "octops" }
+
+    generate_completions_from_executable(bin/"octelium", "completion")
+    generate_completions_from_executable(bin/"octeliumctl", "completion")
+    generate_completions_from_executable(bin/"octops", "completion")
+  end
+
+  test do
+    system "#{bin}/octelium", "version"
+    system "#{bin}/octeliumctl", "version"
+    system "#{bin}/octops", "version"
+  end
+end
