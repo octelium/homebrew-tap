@@ -20,22 +20,17 @@ jobs:
         run: |
           echo "/home/linuxbrew/.linuxbrew/bin" >> $GITHUB_PATH
 
-      - name: Register local workspace as a Tap
+      - name: Install
         run: |
-          mkdir -p "$(brew --repo)/Library/Taps/octelium/homebrew-test"
-          ln -s "$GITHUB_WORKSPACE" "$(brew --repo)/Library/Taps/octelium/homebrew-test"
-
-      - name: Install from Tap
-        run: |
-          brew install --build-from-source octelium/test/octelium
+          brew install octelium/tap/octelium
 
       - name: Verify Binaries
         run: |
-          echo "Testing octelium..."
+          echo "Checking octelium..."
           octelium version
           
-          echo "Testing octeliumctl..."
+          echo "Checking octeliumctl..."
           octeliumctl version
           
-          echo "Testing octops..."
+          echo "Checking octops..."
           octops version
