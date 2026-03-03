@@ -34,3 +34,14 @@ jobs:
           
           echo "Checking octops..."
           octops version
+      
+      - name: Test Uninstallation
+        run: |
+          brew uninstall octelium/tap/octelium
+          
+          ! command -v octelium
+          ! command -v octeliumctl
+          ! command -v octops
+          
+      - name: Cleanup Tap
+        run: brew untap octelium/tap
