@@ -23,6 +23,7 @@ jobs:
       - name: Install
         run: |
           brew install octelium/tap/octelium
+          brew install octelium/tap/cordium
 
       - name: Verify Binaries
         run: |
@@ -34,14 +35,19 @@ jobs:
           
           echo "Checking octops..."
           octops version
+
+          cordium version
       
       - name: Test Uninstallation
         run: |
           brew uninstall octelium/tap/octelium
+          brew uninstall octelium/tap/cordium
+
           
           ! command -v octelium
           ! command -v octeliumctl
           ! command -v octops
+          ! command -v cordium
           
       - name: Cleanup Tap
         run: brew untap octelium/tap

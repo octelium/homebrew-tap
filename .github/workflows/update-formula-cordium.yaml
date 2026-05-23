@@ -1,0 +1,107 @@
+name: Update Cordium Homebrew Formula
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release Tag (e.g. v1.2.3)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+jobs:
+  update-formula:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Resolve Version
+        id: resolve
+        run: |
+          set -euo pipefail
+
+          if [ -z "${{ github.event.inputs.version }}" ]; then
+            echo "No version provided. Fetching latest Cordium release tag from GitHub..."
+            TAG="$(curl -fsSL https://api.github.com/repos/octelium/cordium/releases/latest \
+              | jq -r '.tag_name' \
+              | tr -d '[:space:]')"
+          else
+            TAG="${{ github.event.inputs.version }}"
+          fi
+
+          if [ -z "$TAG" ] || [ "$TAG" = "null" ]; then
+            echo "Error: Failed to resolve Cordium release tag."
+            exit 1
+          fi
+
+          CLEAN_VERSION="${TAG#v}"
+
+          echo "Target tag: $TAG"
+          echo "Clean version: $CLEAN_VERSION"
+
+          echo "TAG=$TAG" >> "$GITHUB_ENV"
+          echo "CLEAN_VERSION=$CLEAN_VERSION" >> "$GITHUB_ENV"
+
+      - name: Download Checksums
+        run: |
+          set -euo pipefail
+
+          CHECKSUM_URL="https://github.com/octelium/cordium/releases/download/${TAG}/SHA256SUMS"
+
+          echo "Downloading checksums from $CHECKSUM_URL"
+          curl -fsSL "$CHECKSUM_URL" -o SHA256SUMS
+
+          if [ ! -s SHA256SUMS ]; then
+            echo "Error: Checksums file is empty or missing."
+            exit 1
+          fi
+
+      - name: Generate Formula from Template
+        run: |
+          set -euo pipefail
+
+          for OS in darwin linux; do
+            for ARCH in amd64 arm64; do
+              VAR_NAME="SHA_CORDIUM_${OS}_${ARCH}"
+              VAR_NAME="$(echo "$VAR_NAME" | tr '[:lower:]' '[:upper:]')"
+
+              FILE_NAME="cordium-${OS}-${ARCH}.tar.gz"
+
+              SHA="$(grep -E "(^|[[:space:]])${FILE_NAME}($|[[:space:]])" SHA256SUMS | awk '{print $1}')"
+
+              if [ -z "$SHA" ]; then
+                echo "Error: Could not find checksum for $FILE_NAME in SHA256SUMS"
+                echo "Available checksums:"
+                cat SHA256SUMS
+                exit 1
+              fi
+
+              export "$VAR_NAME=$SHA"
+              echo "Found $VAR_NAME = $SHA"
+            done
+          done
+
+          envsubst < Formula/cordium.rb.tmpl > Formula/cordium.rb
+
+          echo "Successfully generated Formula/cordium.rb"
+
+      - name: Commit and Push
+        run: |
+          set -euo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add Formula/cordium.rb
+
+          if git diff --staged --quiet; then
+            echo "Formula is already up to date. Nothing to commit."
+          else
+            git commit -m "Update cordium to ${TAG}"
+            git push
+            echo "Pushed Cordium formula update to tap repository."
+          fi

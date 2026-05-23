@@ -1,0 +1,40 @@
+class Cordium < Formula
+  desc "Open-source sandbox platform with identity-based, secretless infrastructure access"
+  homepage "https://octelium.com/cordium"
+  version "${CLEAN_VERSION}"
+  license "Apache-2.0"
+
+  on_macos do
+    on_intel do
+      url "https://github.com/octelium/cordium/releases/download/${TAG}/cordium-darwin-amd64.tar.gz"
+      sha256 "${SHA_CORDIUM_DARWIN_AMD64}"
+    end
+
+    on_arm do
+      url "https://github.com/octelium/cordium/releases/download/${TAG}/cordium-darwin-arm64.tar.gz"
+      sha256 "${SHA_CORDIUM_DARWIN_ARM64}"
+    end
+  end
+
+  on_linux do
+    on_intel do
+      url "https://github.com/octelium/cordium/releases/download/${TAG}/cordium-linux-amd64.tar.gz"
+      sha256 "${SHA_CORDIUM_LINUX_AMD64}"
+    end
+
+    on_arm do
+      url "https://github.com/octelium/cordium/releases/download/${TAG}/cordium-linux-arm64.tar.gz"
+      sha256 "${SHA_CORDIUM_LINUX_ARM64}"
+    end
+  end
+
+  def install
+    bin.install "cordium"
+
+    generate_completions_from_executable(bin/"cordium", "completion")
+  end
+
+  test do
+    system "#{bin}/cordium", "version"
+  end
+end
