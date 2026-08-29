@@ -1,30 +1,30 @@
 class Cordium < Formula
   desc "Open-source sandbox platform with identity-based, secretless infrastructure access"
   homepage "https://octelium.com/cordium"
-  version "0.13.1"
+  version "0.14.0"
   license "Apache-2.0"
 
   on_macos do
     on_intel do
-      url "https://github.com/octelium/cordium/releases/download/v0.13.1/cordium-darwin-amd64.tar.gz"
-      sha256 "450ac1c212032ad8b0ca563277358b922f93655ae3d0c7c7937f5576374ad464"
+      url "https://github.com/octelium/cordium/releases/download/v0.14.0/cordium-darwin-amd64.tar.gz"
+      sha256 "a7ffb3603fc2a8c0b2f84ceeae9aeb8479b88ecfb4354c333237480c04918016"
     end
 
     on_arm do
-      url "https://github.com/octelium/cordium/releases/download/v0.13.1/cordium-darwin-arm64.tar.gz"
-      sha256 "780c3a780a212a93b2fb0a6e38f3793fcc303ccf5ab9abf5239d8b17a009e212"
+      url "https://github.com/octelium/cordium/releases/download/v0.14.0/cordium-darwin-arm64.tar.gz"
+      sha256 "5a4377184066dfbecc03c3ebe708557d4e544f4094a2efdb0d0756f599a4a327"
     end
   end
 
   on_linux do
     on_intel do
-      url "https://github.com/octelium/cordium/releases/download/v0.13.1/cordium-linux-amd64.tar.gz"
-      sha256 "a11c6516d8a437d39b97111d4842bf5d3b7d72580ed1676dd6d3ffcb0ff2b0fc"
+      url "https://github.com/octelium/cordium/releases/download/v0.14.0/cordium-linux-amd64.tar.gz"
+      sha256 "ae8eb7f7e76798055ad530d59045c4cc9ffe835a1621feef112ecc6871d0cda9"
     end
 
     on_arm do
-      url "https://github.com/octelium/cordium/releases/download/v0.13.1/cordium-linux-arm64.tar.gz"
-      sha256 "b1cc9848fd813196eaad1de6132a4fdc047e022a0fc74f2dd6b1374d29fd5d24"
+      url "https://github.com/octelium/cordium/releases/download/v0.14.0/cordium-linux-arm64.tar.gz"
+      sha256 "cdd6615bf55fe3341a6eb547d3df45c2b9e080942854f4b9d6ed578053d52c93"
     end
   end
 
