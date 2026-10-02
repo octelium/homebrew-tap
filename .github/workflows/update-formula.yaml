@@ -1,6 +1,9 @@
 name: Update Homebrew Formula
 
 on:
+  schedule:
+    # Every 30 minutes, offset from the busiest start of the hour.
+    - cron: '7,37 * * * *'
   workflow_dispatch:
     inputs:
       version:
@@ -11,37 +14,71 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: update-octelium-formula-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   update-formula:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          # Read the current branch tip after any earlier updater has finished.
+          ref: ${{ github.ref_name }}
 
       - name: Resolve Version
         id: resolve
+        env:
+          REQUESTED_VERSION: ${{ inputs.version }}
+          GH_TOKEN: ${{ github.token }}
         run: |
-          if [ -z "${{ github.event.inputs.version }}" ]; then
-            echo "No version provided. Fetching latest from octelium repo..."
-            TAG=$(curl -fsSL https://raw.githubusercontent.com/octelium/octelium/refs/heads/main/unsorted/latest_release | tr -d '[:space:]')
+          set -euo pipefail
+
+          if [ -z "$REQUESTED_VERSION" ]; then
+            echo "No version provided. Fetching latest Octelium release from GitHub..."
+            TAG=$(curl -fsSL --retry 3 --connect-timeout 10 --max-time 60 \
+              -H "Accept: application/vnd.github+json" \
+              -H "Authorization: Bearer $GH_TOKEN" \
+              -H "X-GitHub-Api-Version: 2026-03-10" \
+              https://api.github.com/repos/octelium/octelium/releases/latest \
+              | jq -er '.tag_name')
           else
-            TAG="${{ github.event.inputs.version }}"
+            TAG="$REQUESTED_VERSION"
           fi
-          
-          if [ -z "$TAG" ]; then
-            echo "Error: Failed to resolve tag."
+
+          if [[ ! "$TAG" =~ ^v?[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?$ ]]; then
+            echo "Error: Failed to resolve a valid release tag."
             exit 1
           fi
-          
+
           CLEAN_VERSION=${TAG#v}
-          
+
           echo "Target tag: $TAG"
           echo "Clean version: $CLEAN_VERSION"
-          
-          echo "TAG=$TAG" >> $GITHUB_ENV
-          echo "CLEAN_VERSION=$CLEAN_VERSION" >> $GITHUB_ENV
+
+          if [ -z "$REQUESTED_VERSION" ]; then
+            CURRENT_VERSION=$(sed -nE 's/^[[:space:]]*version "([^"]+)"[[:space:]]*$/\1/p' Formula/octelium.rb)
+            if [ -z "$CURRENT_VERSION" ]; then
+              echo "Error: Could not read the current formula version."
+              exit 1
+            fi
+
+            if [ "$CLEAN_VERSION" = "$CURRENT_VERSION" ]; then
+              echo "Formula is already at $TAG. Skipping update."
+              echo "update_needed=false" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+          fi
+
+          echo "TAG=$TAG" >> "$GITHUB_ENV"
+          echo "CLEAN_VERSION=$CLEAN_VERSION" >> "$GITHUB_ENV"
+          echo "update_needed=true" >> "$GITHUB_OUTPUT"
 
       - name: Download Checksums
+        if: steps.resolve.outputs.update_needed == 'true'
         run: |
           CHECKSUM_URL="https://github.com/octelium/octelium/releases/download/${TAG}/SHA256SUMS"
           echo "Downloading checksums from $CHECKSUM_URL"
@@ -53,6 +90,7 @@ jobs:
           fi
 
       - name: Generate Formula from Template
+        if: steps.resolve.outputs.update_needed == 'true'
         run: |
           for BIN in octelium octeliumctl octops; do
             for OS in darwin linux; do
@@ -82,6 +120,7 @@ jobs:
           echo "Successfully generated Formula/octelium.rb"
 
       - name: Commit and Push
+        if: steps.resolve.outputs.update_needed == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
