@@ -1,69 +1,69 @@
 class Octelium < Formula
   desc "Octelium CLI suite: octelium, octeliumctl, and octops"
   homepage "https://octelium.com"
-  version "0.44.0"
+  version "0.45.0"
   license "Apache-2.0"
 
   on_macos do
     on_intel do
-      url "https://github.com/octelium/octelium/releases/download/v0.44.0/octelium-darwin-amd64.tar.gz"
-      sha256 "f3931d7fb5fecaea69fb5ad58b59bcc98a82dc1f1b10efbe2d47af8e9b17ef62"
+      url "https://github.com/octelium/octelium/releases/download/v0.45.0/octelium-darwin-amd64.tar.gz"
+      sha256 "dcc509442657d13466b778c2cec60f9921ac9a57871fcd601680c669f4d5f959"
 
       resource "octeliumctl" do
-        url "https://github.com/octelium/octelium/releases/download/v0.44.0/octeliumctl-darwin-amd64.tar.gz"
-        sha256 "17c0b7df155ce8e77c6582e378c2676790c1278559258e475e3aa8c3e34234fd"
+        url "https://github.com/octelium/octelium/releases/download/v0.45.0/octeliumctl-darwin-amd64.tar.gz"
+        sha256 "3d05208327dbf39315e231e3dda10f2e43233bee0d1a83c5430b71e9ad965db5"
       end
 
       resource "octops" do
-        url "https://github.com/octelium/octelium/releases/download/v0.44.0/octops-darwin-amd64.tar.gz"
-        sha256 "224b43f1ceb74ab39ed862a1ce7a340798ac066dbf672754630d469c8a14c623"
+        url "https://github.com/octelium/octelium/releases/download/v0.45.0/octops-darwin-amd64.tar.gz"
+        sha256 "1a4c5094fc89bd2fcc21a0366a12959b39faeff1b949420f11682367ed3c99a0"
       end
     end
 
     on_arm do
-      url "https://github.com/octelium/octelium/releases/download/v0.44.0/octelium-darwin-arm64.tar.gz"
-      sha256 "c3a5def72c0120aa2fd1c272a9e5793f025b1b320f01f09b71f7869bdee09abe"
+      url "https://github.com/octelium/octelium/releases/download/v0.45.0/octelium-darwin-arm64.tar.gz"
+      sha256 "2229b106f0b2f93fad2b320fcb6dd2d869e583391ca84d52a88f37ef3622366a"
 
       resource "octeliumctl" do
-        url "https://github.com/octelium/octelium/releases/download/v0.44.0/octeliumctl-darwin-arm64.tar.gz"
-        sha256 "25c4d3e943e07e031093b3f482945bb8d4ecd89f0c2a6961b9110902f0730606"
+        url "https://github.com/octelium/octelium/releases/download/v0.45.0/octeliumctl-darwin-arm64.tar.gz"
+        sha256 "c6b0e22b1ce2feadf5aa652c38c0a6d1360632635002acc69372b637d7b90d8b"
       end
 
       resource "octops" do
-        url "https://github.com/octelium/octelium/releases/download/v0.44.0/octops-darwin-arm64.tar.gz"
-        sha256 "6e642d12f382a1b52cbc261ec79588bb21b94934c5153402bb8c8f4a85e08c04"
+        url "https://github.com/octelium/octelium/releases/download/v0.45.0/octops-darwin-arm64.tar.gz"
+        sha256 "abecf4c97fca356e7694f8ab6ddb7b19c56829d630334d7f722e144edc778979"
       end
     end
   end
 
   on_linux do
     on_intel do
-      url "https://github.com/octelium/octelium/releases/download/v0.44.0/octelium-linux-amd64.tar.gz"
-      sha256 "19543a596a3fd5204357470152a4bc6b054fcab0243ae7048982de3925b1e13c"
+      url "https://github.com/octelium/octelium/releases/download/v0.45.0/octelium-linux-amd64.tar.gz"
+      sha256 "fbb2efbfc12994d3500cd44faa2c2f69b6d3dd02bca5dc11e41f3df8b7e42ebc"
 
       resource "octeliumctl" do
-        url "https://github.com/octelium/octelium/releases/download/v0.44.0/octeliumctl-linux-amd64.tar.gz"
-        sha256 "bdef31081be2f803de75632e94d491a26ae99d680d87d35674d1794eeae25ef1"
+        url "https://github.com/octelium/octelium/releases/download/v0.45.0/octeliumctl-linux-amd64.tar.gz"
+        sha256 "9a5827f3576346852fd9e120b636814d8f12ca22aceacbdd765adaad397c2b4d"
       end
 
       resource "octops" do
-        url "https://github.com/octelium/octelium/releases/download/v0.44.0/octops-linux-amd64.tar.gz"
-        sha256 "5575def73aa0e8e978eef7fe29c876d841104965f6ac332a79a2069e9d065a92"
+        url "https://github.com/octelium/octelium/releases/download/v0.45.0/octops-linux-amd64.tar.gz"
+        sha256 "b6c2bcfa5c05f17a30f591078c0dbb2e5caf74883d59edbd2e990f6c5ae5fd1f"
       end
     end
 
     on_arm do
-      url "https://github.com/octelium/octelium/releases/download/v0.44.0/octelium-linux-arm64.tar.gz"
-      sha256 "8a56d4ba68c3e10700766d162a2bf95fc0658d29a1bd34278a43d80416689e60"
+      url "https://github.com/octelium/octelium/releases/download/v0.45.0/octelium-linux-arm64.tar.gz"
+      sha256 "779bcb7c686f425da362d2809ac086b077eb285a37f327ee6a82fe819ffc5d9c"
 
       resource "octeliumctl" do
-        url "https://github.com/octelium/octelium/releases/download/v0.44.0/octeliumctl-linux-arm64.tar.gz"
-        sha256 "6c8f7afe080e947ded82b10b192bcb7e387074039bf2b59b4aa665b78809e4e3"
+        url "https://github.com/octelium/octelium/releases/download/v0.45.0/octeliumctl-linux-arm64.tar.gz"
+        sha256 "c17cecdd7a4efddee82f7e33b877949200b3a048f27b9cc47cac0acd4ccdb12e"
       end
 
       resource "octops" do
-        url "https://github.com/octelium/octelium/releases/download/v0.44.0/octops-linux-arm64.tar.gz"
-        sha256 "2c1c5d6e79186d48133ec587daaec608fa2cbe2c6e1f73e8ec93286adf7be158"
+        url "https://github.com/octelium/octelium/releases/download/v0.45.0/octops-linux-arm64.tar.gz"
+        sha256 "734a603c5071d4047a3d29be0603689876443d3300d8f2aba60fddd49f492b59"
       end
     end
   end
